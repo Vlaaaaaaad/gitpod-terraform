@@ -1,0 +1,119 @@
+name: Docker
+
+on:
+  push:
+  schedule:
+    - cron: '0 12 * * *'
+
+jobs:
+  GitHub:
+    name: GitHub Package Registry
+    runs-on: ubuntu-18.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+
+      - name: Set env vars
+        run: |
+          echo "::set-env name=USER::$( echo $GITHUB_ACTOR | awk '{print tolower($0)}' )"
+          echo "::set-env name=REPO::$( basename $GITHUB_REPOSITORY | awk '{print tolower($0)}' )"
+          echo "::set-env name=URL::https://github.com/$( echo $GITHUB_ACTOR | awk '{print tolower($0)}' )/$( basename $GITHUB_REPOSITORY | awk '{print tolower($0)}' )"
+
+      - name: Login to GitHub Package Repository
+        env:
+          # A personal token has to be used until GitHub Actions is out of beta
+          #  see https://github.community/t5/GitHub-Actions/Github-Actions-Docker-login/m-p/31262/highlight/true#M740
+          GH_TOKEN: ${{ secrets.GITHUB_PERSONAL_TOKEN_CAUSE_BETA }}
+        run: |
+          docker login docker.pkg.github.com --username $USER --password ${GH_TOKEN}
+
+      - name: Build
+        run: |
+          docker build . -t gitpod-terraform:latest \
+            --build-arg BUILD_DATE=$(date -u +"%Y-%m-%d") \
+            --build-arg VCS_REF=$GITHUB_SHA \
+            --build-arg VERSION=$GITHUB_SHA \
+            --build-arg VENDOR=$USER \
+            --build-arg AUTHOR=$USER \
+            --build-arg GIT_REPO=$URL \
+            --build-arg DOCUMENTATION=$URL
+
+      - name: Tag and push SHA
+        run: |
+          docker tag gitpod-terraform:latest docker.pkg.github.com/$USER/$REPO/gitpod-terraform:commit-${GITHUB_SHA}
+          docker push docker.pkg.github.com/$USER/$REPO/gitpod-terraform:commit-${GITHUB_SHA}
+
+      - name: Tag and push latest
+        if: github.ref == 'refs/heads/master'
+        run: |
+          docker tag gitpod-terraform:latest docker.pkg.github.com/$USER/$REPO/gitpod-terraform:latest
+          docker push docker.pkg.github.com/$USER/$REPO/gitpod-terraform:latest
+
+  Dockerhub:
+    name: DockerHub
+    runs-on: ubuntu-18.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+
+      - name: Set env vars
+        run: |
+          echo "::set-env name=USER::$( echo $GITHUB_ACTOR | awk '{print tolower($0)}' )"
+          echo "::set-env name=REPO::$( basename $GITHUB_REPOSITORY | awk '{print tolower($0)}' )"
+          echo "::set-env name=URL::https://github.com/$( echo $GITHUB_ACTOR | awk '{print tolower($0)}' )/$( basename $GITHUB_REPOSITORY | awk '{print tolower($0)}' )"
+
+          echo "::set-env name=DOCKERHUB_REPOSITORY::$( echo $GITHUB_ACTOR | awk '{print tolower($0)}' )/$( basename $GITHUB_REPOSITORY | awk '{print tolower($0)}' )"
+
+      # - name: Publish to Registry
+      #   uses: elgohr/Publish-Docker-Github-Action@master
+      #   with:
+      #     name: vlaaaaaaad/gitpod-terraform
+      #     username: ${{ secrets.DOCKERHUB_USERNAME }}
+      #     password: ${{ secrets.DOCKERHUB_PASSWORD }}
+      # buuuuuuut
+      # I want some more flexibility in tags so manual work:
+
+      - name: Login to Dockerhub
+        env:
+          DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+        run: |
+          echo $DOCKERHUB_PASSWORD | docker login --username $USER --password-stdin
+
+      - name: Build
+        run: |
+          docker build . -t gitpod-terraform:latest \
+            --build-arg BUILD_DATE=$(date -u +"%Y-%m-%d") \
+            --build-arg VCS_REF=$GITHUB_SHA \
+            --build-arg VERSION=$GITHUB_SHA \
+            --build-arg VENDOR=$USER \
+            --build-arg AUTHOR=$USER \
+            --build-arg GIT_REPO=$URL \
+            --build-arg DOCUMENTATION=$URL
+
+      - name: Tag and push SHA
+        env:
+          DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+        run: |
+          docker tag gitpod-terraform:latest $USER/$REPO:commit-${GITHUB_SHA}
+          docker push $USER/$REPO:commit-${GITHUB_SHA}
+
+      - name: Tag and push latest
+        if: github.ref == 'refs/heads/master'
+        env:
+          DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+        run: |
+          docker tag gitpod-terraform:latest $USER/$REPO:latest
+          docker push $USER/$REPO:latest
+
+      - name: Docker Hub Description <> README.md
+        uses: peter-evans/dockerhub-description@v2.0.0
+        if: github.ref == 'refs/heads/master'
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
