@@ -28,7 +28,7 @@ jobs:
           #  see https://github.community/t5/GitHub-Actions/Github-Actions-Docker-login/m-p/31262/highlight/true#M740
           GH_TOKEN: ${{ secrets.GITHUB_PERSONAL_TOKEN_CAUSE_BETA }}
         run: |
-          docker login docker.pkg.github.com --username $USER --password ${GH_TOKEN}
+          docker login docker.pkg.github.com --username $USER --password $GH_TOKEN
 
       - name: Build
         run: |
@@ -43,8 +43,8 @@ jobs:
 
       - name: Tag and push SHA
         run: |
-          docker tag gitpod-terraform:latest docker.pkg.github.com/$USER/$REPO/gitpod-terraform:commit-${GITHUB_SHA}
-          docker push docker.pkg.github.com/$USER/$REPO/gitpod-terraform:commit-${GITHUB_SHA}
+          docker tag gitpod-terraform:latest docker.pkg.github.com/$USER/$REPO/gitpod-terraform:commit-$GITHUB_SHA
+          docker push docker.pkg.github.com/$USER/$REPO/gitpod-terraform:commit-$GITHUB_SHA
 
       - name: Tag and push latest
         if: github.ref == 'refs/heads/master'
@@ -100,8 +100,8 @@ jobs:
         env:
           DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
         run: |
-          docker tag gitpod-terraform:latest $USER/$REPO:commit-${GITHUB_SHA}
-          docker push $USER/$REPO:commit-${GITHUB_SHA}
+          docker tag gitpod-terraform:latest $USER/$REPO:commit-$GITHUB_SHA
+          docker push $USER/$REPO:commit-$GITHUB_SHA
 
       - name: Tag and push latest
         if: github.ref == 'refs/heads/master'
