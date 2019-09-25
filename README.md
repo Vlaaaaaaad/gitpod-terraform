@@ -1,5 +1,7 @@
 # Gitpod Terraform image
 
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io#https://github.com/Vlaaaaaaad/gitpod-terraform)
+
 Helper image for Terraform module development in [Gitpod](https://gitpod.io).
 
 Tags available:
