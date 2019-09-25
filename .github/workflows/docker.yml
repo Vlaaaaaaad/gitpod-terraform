@@ -28,7 +28,7 @@ jobs:
           #  see https://github.community/t5/GitHub-Actions/Github-Actions-Docker-login/m-p/31262/highlight/true#M740
           GH_TOKEN: ${{ secrets.GITHUB_PERSONAL_TOKEN_CAUSE_BETA }}
         run: |
-          docker login docker.pkg.github.com --username $USER --password ${GH_TOKEN}
+          docker login docker.pkg.github.com --username $USER --password $GH_TOKEN
 
       - name: Build
         run: |
