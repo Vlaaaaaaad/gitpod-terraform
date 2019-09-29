@@ -7,7 +7,8 @@ function cd
   builtin cd "$@" && ls
 }
 
-source ~/.zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+export PATH=/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH
+source /usr/local/share/.zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 autoload colors; colors
 
@@ -84,7 +85,7 @@ setopt correctall
 
 autoload -U +X bashcompinit && bashcompinit
 
-source ~/.zsh-history-substring-search/zsh-history-substring-search.zsh
+source /usr/local/share/.zsh-history-substring-search/zsh-history-substring-search.zsh
 bindkey "$terminfo[kcuu1]" history-substring-search-up
 bindkey "$terminfo[kcud1]" history-substring-search-down
 
