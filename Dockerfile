@@ -45,7 +45,8 @@ RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/mast
 # Install helper tools
 RUN brew install \
     zsh zsh-completions zsh-history-substring-search zsh-syntax-highlighting \
-    awk pre-commit tfenv terraform-docs tflint
+    awk pre-commit tfenv terraform-docs tflint \
+    && brew cleanup
 RUN tfenv install latest
 
 # Set zsh config by appending to default one
