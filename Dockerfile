@@ -31,42 +31,25 @@ RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 \
   && add-apt-repository "deb http://kryptco.github.io/deb kryptco main" \
   && apt-get update \
   && DEBIAN_FRONTEND=noninteractive apt-get install -yq \
-  zsh zsh-common \
   kr software-properties-common dirmngr apt-transport-https \
+  build-essential curl file git \
   && apt-get clean && rm -rf /var/cache/apt/* && rm -rf /var/lib/apt/lists/* && rm -rf /tmp/*
 
 # Install tools as user
 USER gitpod
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-# Install latest Terraform with tfenv for easier management
-RUN git clone  --depth 1 \
-    https://github.com/tfutils/tfenv.git \
-    "$HOME/.tfenv"
-ENV PATH="$HOME/.tfenv/bin:$PATH"
+# Install brew for easy Linux <> macOS parity
+RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
+
+# Install helper tools
+RUN brew install \
+    zsh zsh-completions zsh-history-substring-search zsh-syntax-highlighting \
+    awk pre-commit tfenv terraform-docs tflint \
+    && brew cleanup
 RUN tfenv install latest
 
-# Install latest tflint
-RUN curl -sSL https://raw.githubusercontent.com/wata727/tflint/master/install_linux.sh | sh
-
-# Install pre-commit for automated checks
-RUN pip3 install pre-commit
-
-# Install latest terraform-docs
-ENV GO_VERSION=1.12 \
-    GOPATH=$HOME/go-packages \
-    GOROOT=$HOME/go
-ENV PATH=$GOROOT/bin:$GOPATH/bin:$PATH
-RUN go get github.com/segmentio/terraform-docs
-
 # Set zsh config by appending to default one
-RUN git clone --depth 1 \
-      https://github.com/zsh-users/zsh-syntax-highlighting \
-      "$HOME/.zsh-syntax-highlighting"
-RUN git clone --depth 1 \
-      https://github.com/zsh-users/zsh-history-substring-search \
-      "$HOME/.zsh-history-substring-search"
-
 COPY .gitpod.zshrc .
 RUN cat .gitpod.zshrc >> "$HOME/.zshrcnew" \
     && cat "$HOME/.zshrc" >> "$HOME/.zshrcnew" \
@@ -85,6 +68,6 @@ COPY helpers "$HOME/helpers/"
 USER root
 #  but after making helpers executable
 RUN chmod +x "$HOME/helpers/"*.sh
-#  revert back to default shell
-#  adding Gitpod Layer will fail otherwise
+#  and revert back to default shell
+#  otherwise adding Gitpod Layer will fail
 SHELL ["/bin/sh", "-c"]
