@@ -40,7 +40,7 @@ USER gitpod
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # Install helper tools
-RUN brew update &&
+RUN brew update && \
     brew install \
     zsh zsh-completions zsh-history-substring-search zsh-syntax-highlighting \
     awk pre-commit tfenv terraform-docs tflint \
