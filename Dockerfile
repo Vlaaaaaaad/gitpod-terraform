@@ -43,7 +43,8 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN brew update && \
     brew install \
     zsh zsh-completions zsh-history-substring-search zsh-syntax-highlighting \
-    awk pre-commit tfenv terraform-docs tflint \
+    awk pre-commit tfenv terraform-docs \
+    tflint liamg/tfsec/tfsec instrumenta/instrumenta/conftest \
     && brew cleanup
 RUN tfenv install latest
 
