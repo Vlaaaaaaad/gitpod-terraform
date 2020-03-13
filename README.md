@@ -22,6 +22,8 @@ The image comes with several helpful tools pre-installed:
 - [pre-commit](https://pre-commit.com) for pre-commit hooks like [pre-commit-terraform](https://github.com/antonbabenko/pre-commit-terraform)
 - [terraform-docs](https://github.com/segmentio/terraform-docs) for Terraform documentation generation
 - [tflint](https://github.com/wata727/tflint) for Terraform best practices verification
+- [tfsec](https://github.com/liamg/tfsec) for security best practices
+- [conftest](https://github.com/instrumenta/conftest) for running Open Policy Agent tests on Terraform code
 - [krypt.co](https://krypt.co) for secure SSH and GPG key management
 
 ### Helpful scripts
