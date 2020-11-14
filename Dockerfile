@@ -34,11 +34,7 @@ RUN brew update && brew install \
     && brew cleanup
 RUN tfenv install latest && tfenv use latest
 
-# Set bash config by appending to default one
-COPY .gitpod.bashrc .
-RUN cat .gitpod.bashrc >> "$HOME/.bashrcnew" \
-  && cat "$HOME/.bashrc" >> "$HOME/.bashrcnew" \
-  && mv "$HOME/.bashrcnew" "$HOME/.bashrc"
+COPY .gitpod.bashrc /home/gitpod/.bashrc.d/custom
 
 # Give back control
 USER root
