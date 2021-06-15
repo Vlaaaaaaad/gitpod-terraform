@@ -5,20 +5,23 @@
 Helper image for Terraform module development in [Gitpod](https://gitpod.io).
 
 Tags available:
-- `latest` which is the recommended tag( [Gitpod-official images use `latest` too](https://hub.docker.com/r/gitpod/workspace-full/tags))
-- `commit-$SHA` which is to be used for development
+
+- `latest` which is the recommended tag ([Gitpod-official images use `latest` too](https://hub.docker.com/r/gitpod/workspace-full/tags))
+- the date of the buld, like `2021-06-25` for tighter control of versions
 
 To use the image, [set it in `.gitpod.yml`](https://www.gitpod.io/docs/42_config_docker/):
+
 ```yaml
-image: vlaaaaaaad/gitpod-terraform:latest
+image: public.ecr.aws/vlaaaaaaad/gitpod-terraform:latest
 ```
 
 ## Builtins
 
 The image comes with several helpful tools pre-installed:
+
 - `bash` which is also configured
-- `zsh` which is also configured, including [zsh-syntax-highlighting](https://github.com/zsh-users/zsh-syntax-highlighting) and [zsh-history-substring-search](https://github.com/zsh-users/zsh-history-substring-search)
 - latest version of [Terraform](https://www.terraform.io/) installed by [`tfenv`](https://github.com/tfutils/tfenv) for a better user experience
+- `cdktf` for people on the edge using [CDK (Cloud Development Kit) for Terraform](https://github.com/hashicorp/terraform-cdk)
 - [pre-commit](https://pre-commit.com) for pre-commit hooks like [pre-commit-terraform](https://github.com/antonbabenko/pre-commit-terraform)
 - [terraform-docs](https://github.com/segmentio/terraform-docs) for Terraform documentation generation
 - [tflint](https://github.com/wata727/tflint) for Terraform best practices verification
