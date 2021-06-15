@@ -7,7 +7,7 @@ Helper image for Terraform module development in [Gitpod](https://gitpod.io).
 Tags available:
 
 - `latest` which is the recommended tag ([Gitpod-official images use `latest` too](https://hub.docker.com/r/gitpod/workspace-full/tags))
-- the date of the buld, like `2021-06-25` for tighter control of versions
+- the date of the build, like `2021-06-25` for tighter control of versions
 
 To use the image, [set it in `.gitpod.yml`](https://www.gitpod.io/docs/42_config_docker/):
 
