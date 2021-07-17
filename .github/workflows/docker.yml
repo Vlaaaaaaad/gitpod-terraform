@@ -50,7 +50,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
         with:
-          version: v0.6.0
+          version: v0.6.0 # Needed for now
 
       - name: Build and push to AWS ECR Public
         uses: docker/build-push-action@v2
