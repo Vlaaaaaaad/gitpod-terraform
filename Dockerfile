@@ -6,9 +6,9 @@ USER gitpod
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # Install helper tools
-RUN brew update && brew install \
+RUN brew update && brew upgrade && brew install \
     gawk coreutils pre-commit tfenv terraform-docs \
-    tflint liamg/tfsec/tfsec instrumenta/instrumenta/conftest \
+    tflint tfsec instrumenta/instrumenta/conftest \
     && brew install --ignore-dependencies cdktf \
     && brew cleanup
 RUN tfenv install latest && tfenv use latest
