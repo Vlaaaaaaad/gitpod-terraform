@@ -1,18 +1,18 @@
 # Gitpod Terraform image
 
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io#https://github.com/Vlaaaaaaad/gitpod-terraform)
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io#https://github.com/10nxt/gitpod-terraform)
 
 Helper image for Terraform module development in [Gitpod](https://gitpod.io).
 
 Tags available:
 
 - `latest` which is the recommended tag ([Gitpod-official images use `latest` too](https://hub.docker.com/r/gitpod/workspace-full/tags))
-- the date of the build, like `2021-06-25` for tighter control of versions
+- the date of the build, like `2022-12-29` for tighter control of versions
 
 To use the image, [set it in `.gitpod.yml`](https://www.gitpod.io/docs/42_config_docker/):
 
 ```yaml
-image: public.ecr.aws/vlaaaaaaad/gitpod-terraform:latest
+image: todo_change_me
 ```
 
 ## Builtins
@@ -32,7 +32,7 @@ The image comes with several helpful tools pre-installed:
 
 ## Contributing
 
-1. Fork it ([https://github.com/vlaaaaaaad/gitpod-terraform/fork](https://github.com/vlaaaaaaad/gitpod-terraform/fork))
+1. Fork it ([https://github.com/10nxt/gitpod-terraform/fork](https://github.com/10nxt/gitpod-terraform/fork))
 2. Create your feature branch (`git checkout -b feature/fooBar`)
 3. Commit your changes (`git commit -am 'Add some fooBar'`)
 4. Push to the branch (`git push origin feature/fooBar`)
@@ -41,7 +41,8 @@ The image comes with several helpful tools pre-installed:
 ## Credits
 
 - [@jankeromnes](https://github.com/jankeromnes) for being [very helpful on a GitHub issue and providing guidance](https://github.com/gitpod-io/gitpod/issues/782)
+- [@Vlaaaaaaad](https://github.com/Vlaaaaaaad/gitpod-terraform) original where this is forked from
 
 ## License
 
-This project is provided under the [MIT License](https://github.com/vlaaaaaaad/gitpod-terraform/blob/master/LICENSE.md). See [LICENSE](https://github.com/vlaaaaaaad/gitpod-terraform/blob/master/LICENSE.md) for more information.
+This project is provided under the [MIT License](LICENSE.md). See [LICENSE](LICENSE.md) for more information.
