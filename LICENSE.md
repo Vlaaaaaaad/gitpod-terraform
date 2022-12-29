@@ -2,7 +2,7 @@
 
 Copyright (c) 2019 Vlad Ionescu
 
-Copyright (c) 2022 10nxt
+Copyright (c) 2022 10nxt.com
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
