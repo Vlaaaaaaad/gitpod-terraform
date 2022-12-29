@@ -14,9 +14,6 @@ jobs:
       - name: Get the code
         uses: actions/checkout@v2.5.0 # Checking out the repo
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-
       - name: Build and publish Docker Images to GitHub Container registry
         # You may pin to the exact commit or the version.
         # uses: VaultVulp/gp-docker-action@32d98d2f1c7deb6927918b019d278a9a24aca736
