@@ -5,67 +5,27 @@ on:
   schedule:
     - cron: '0 12 * * *'
 
-env:
-  AWS_ECR_PUBLIC_REGISTRY_ALIAS: "vlaaaaaaad"
-  AWS_ECR_PUBLIC_REPO_NAME: "gitpod-terraform"
-
 jobs:
-  aws_ecr_public:
-    name: Amazon ECR Public
+  build-and-publish-head:
+    name: Build and publish head
     runs-on: ubuntu-latest
 
     steps:
       - name: Get the code
-        uses: actions/checkout@v2
-
-      - name: Prepare for container image build
-        id: prepare
-        run: |
-          echo "::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
-          echo "::set-output name=version::$(date '+%Y-%m-%d')"
-          
-          ECR_PUBLIC_SHA_TAG="public.ecr.aws/${{ env.AWS_ECR_PUBLIC_REGISTRY_ALIAS }}/${{ env.AWS_ECR_PUBLIC_REPO_NAME }}:${{ github.sha }}"
-          TAGS=$ECR_PUBLIC_SHA_TAG
-          echo "🏷️ Added container tag: ${ECR_PUBLIC_SHA_TAG}"
-          
-          if [[ "${{ github.ref }}" == 'refs/heads/main' ]]; then
-            ECR_PUBLIC_DATE_TAG="public.ecr.aws/${{ env.AWS_ECR_PUBLIC_REGISTRY_ALIAS }}/${{ env.AWS_ECR_PUBLIC_REPO_NAME }}:$(date '+%Y-%m-%d')"
-            ECR_PUBLIC_LATEST_TAG="public.ecr.aws/${{ env.AWS_ECR_PUBLIC_REGISTRY_ALIAS }}/${{ env.AWS_ECR_PUBLIC_REPO_NAME }}:latest"
-            
-            TAGS+=", ${ECR_PUBLIC_DATE_TAG}, ${ECR_PUBLIC_LATEST_TAG}"
-            echo "🏷️ Added container tag: ${ECR_PUBLIC_DATE_TAG}"
-            echo "🏷️ Added container tag: ${ECR_PUBLIC_LATEST_TAG}"
-          fi
-          
-          echo "::set-output name=tags::${TAGS}"
-          echo "🏷️ Final list of container image tags: ${TAGS}"
-
-      - name: Login to AWS ECR Public
-        uses: docker/login-action@v1
-        with:
-          registry: public.ecr.aws
-          username: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          password: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        uses: actions/checkout@v2.5.0 # Checking out the repo
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
-      - name: Build and push to AWS ECR Public
-        uses: docker/build-push-action@v2
+      - name: Build and publish Docker Images to GitHub Container registry
+        # You may pin to the exact commit or the version.
+        # uses: VaultVulp/gp-docker-action@32d98d2f1c7deb6927918b019d278a9a24aca736
+        uses: VaultVulp/gp-docker-action@1.5.0
         with:
-          context: .
-          no-cache: true # Waiting for https://github.com/docker/buildx/pull/535
-          file: ./Dockerfile
-          platforms: linux/amd64
-          labels: |
-            org.opencontainers.image.title=${{ github.event.repository.name }}
-            org.opencontainers.image.vendor=${{ github.event.repository.owner.login }}
-            org.opencontainers.image.description=${{ github.event.repository.description }}
-            org.opencontainers.image.url=${{ github.event.repository.html_url }}
-            org.opencontainers.image.source=${{ github.event.repository.clone_url }}
-            org.opencontainers.image.version=${{ steps.prepare.outputs.version }}
-            org.opencontainers.image.created=${{ steps.prepare.outputs.created }}
-            org.opencontainers.image.revision=${{ github.sha }}
-            org.opencontainers.image.licenses=${{ github.event.repository.license.spdx_id }}
-          push: true
-          tags: ${{ steps.prepare.outputs.tags }}
+          # GitHub token to push Docker image to GitHub Packages
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          # Docker Image name
+          image-name: gitpod-terraform
+          additional-image-tags: $(date '+%Y-%m-%d') ${{ github.sha }}
+          
+
